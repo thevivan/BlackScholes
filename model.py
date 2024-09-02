@@ -1,52 +1,32 @@
-import math
 import numpy as np
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 from scipy.stats import norm
 
-def black_scholes(S, K, T, r, sigma, option_type):
-    """
-    Calculates the price of a European call or put option using the Black-Scholes model.
+class PricingModel:
+    def __init__(self, time, strike, spot, vol, rate):
+        self.time = time
+        self.strike = strike
+        self.spot = spot
+        self.vol = vol
+        self.rate = rate
 
-    Parameters:
-    S (float): Current stock price
-    K (float): Strike price
-    T (float): Time to expiration (in years)
-    r (float): Risk-free interest rate (continuously compounded)
-    sigma (float): Volatility of the stock (annual standard deviation)
-    option_type (str): 'call' or 'put'
+    def calculate(self):
+        d1 = (np.log(self.spot / self.strike) + (self.rate + 0.5 * self.vol ** 2) * self.time) / (self.vol * np.sqrt(self.time))
+        d2 = d1 - self.vol * np.sqrt(self.time)
 
-    Returns:
-    float: Price of the option
-    """
-    d1 = (math.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * math.sqrt(T))
-    d2 = d1 - sigma * math.sqrt(T)
+        self.call_price = self.spot * norm.cdf(d1) - (self.strike * np.exp(-(self.rate * self.time)) * norm.cdf(d2))
+        self.put_price = (self.strike * np.exp(-(self.rate * self.time)) * norm.cdf(-d2)) - self.spot * norm.cdf(-d1)
 
-    if option_type == 'call':
-        price = S * norm.cdf(d1) - K * math.exp(-r * T) * norm.cdf(d2)
-    elif option_type == 'put':
-        price = K * math.exp(-r * T) * norm.cdf(-d2) - S * norm.cdf(-d1)
-    else:
-        raise ValueError("Invalid option type. Must be 'call' or 'put'.")
+        self.call_delta = norm.cdf(d1)
+        self.put_delta = -norm.cdf(-d1)
+        self.gamma = norm.pdf(d1) / (self.spot * self.vol * np.sqrt(self.time))
 
-    return price
+        # Vega (sensitivity to volatility)
+        self.vega = self.spot * norm.pdf(d1) * np.sqrt(self.time)
 
-def generate_heatmap(S_range, sigma_range, K, T, r, option_type):
-    prices = []
-    for S in S_range:
-        row = []
-        for sigma in sigma_range:
-            price = black_scholes(S, K, T, r, sigma, option_type)
-            row.append(price)
-        prices.append(row)
+        # Vanna (sensitivity of Vega to changes in spot price)
+        self.vanna = self.vega * (d1 / self.vol)
 
-    df = pd.DataFrame(prices, index=S_range, columns=np.round(sigma_range, 2))
-    
-    fig, ax = plt.subplots(figsize=(10, 8))
-    sns.heatmap(df, annot=True, cmap='viridis', fmt='.2f', cbar_kws={'label': option_type.capitalize() + ' Option Price'}, ax=ax)
-    ax.set_xlabel('Volatility')
-    ax.set_ylabel('Spot Price')
-    ax.set_title('Black-Scholes ' + option_type.capitalize() + ' Option Price Heatmap')
-    
-    return fig
+        # Volga (sensitivity of Vega to changes in volatility)
+        self.volga = self.vega * d1 * d2 / self.vol
+
+        return self.call_price, self.put_price
