@@ -61,8 +61,8 @@ st.markdown('<div class="designer-tag">Designed by Vivan Vasudeva</div>', unsafe
 # Sidebar input
 with st.sidebar:
     st.title("Parameters")
-    spot_price = st.number_input("Spot Price", value=100.0)
-    strike_price = st.number_input("Strike Price", value=100.0)
+    spot_price = st.number_input("Spot Price", value=100.0, step=0.05)
+    strike_price = st.number_input("Strike Price", value=100.0, step=0.05)
     time_to_expiry = st.number_input("Time to Expiry (Years)", value=1.0)
     volatility = st.number_input("Volatility (σ)", value=0.2)
     risk_free_rate = st.number_input("Risk-Free Rate", value=0.05)
@@ -72,8 +72,8 @@ with st.sidebar:
 
     st.markdown("---")
     st.subheader("Heatmap Settings")
-    spot_min = st.number_input('Min Spot Price', min_value=0.01, value=spot_price * 0.8, step=0.05)
-    spot_max = st.number_input('Max Spot Price', min_value=0.01, value=spot_price * 1.2, step=0.05)
+    spot_min = st.number_input('Min Spot Price', min_value=0.01, value=spot_price * 0.8, step=0.01)
+    spot_max = st.number_input('Max Spot Price', min_value=0.01, value=spot_price * 1.2, step=0.01)
     vol_min = st.slider('Min Volatility', min_value=0.01, max_value=1.0, value=volatility * 0.5, step=0.01)
     vol_max = st.slider('Max Volatility', min_value=0.01, max_value=1.0, value=volatility * 1.5, step=0.01)
 
