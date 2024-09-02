@@ -60,7 +60,7 @@ st.markdown('<div class="designer-tag">Designed by Vivan Vasudeva</div>', unsafe
 
 # Sidebar input
 with st.sidebar:
-    st.title("Option Pricing Tool")
+    st.title("Parameters")
     spot_price = st.number_input("Spot Price", value=100.0)
     strike_price = st.number_input("Strike Price", value=100.0)
     time_to_expiry = st.number_input("Time to Expiry (Years)", value=1.0)
