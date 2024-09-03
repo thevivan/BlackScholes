@@ -137,7 +137,7 @@ with col1:
     st.markdown(f"""
         <div class="metric-box metric-call">
             <div>
-                <div class="metric-label">Call Price</div>
+                <div class="metric-label">Call Value</div>
                 <div class="metric-value">£{call_price:.2f}</div>
             </div>
         </div>
@@ -147,7 +147,7 @@ with col2:
     st.markdown(f"""
         <div class="metric-box metric-put">
             <div>
-                <div class="metric-label">Put Price</div>
+                <div class="metric-label">Put Value</div>
                 <div class="metric-value">£{put_price:.2f}</div>
             </div>
         </div>
