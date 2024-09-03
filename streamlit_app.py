@@ -47,6 +47,13 @@ st.markdown("""
             margin-top: -20px;
             margin-bottom: 10px;
         }
+        .designer-tag a {
+            text-decoration: none;
+            color: #888;
+        }
+        .designer-tag a:hover {
+            color: #333;
+        }
         .subtle-metric {
             font-size: 16px;
             color: #555;
@@ -55,8 +62,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Designer tag
-st.markdown('<div class="designer-tag">Designed by Vivan Vasudeva</div>', unsafe_allow_html=True)
+# Designer tag with customized hyperlink
+st.markdown('<div class="designer-tag">Designed by <a href="https://www.linkedin.com/in/vivan-v/" target="_blank">Vivan Vasudeva</a></div>', unsafe_allow_html=True)
 
 # Sidebar input
 with st.sidebar:
@@ -101,20 +108,21 @@ def generate_heatmaps(model, spot_range, vol_range, strike_price, perspective):
 
     fig_call, ax_call = plt.subplots(figsize=(10, 8))
     sns.heatmap(call_data, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".2f", cmap=cmap_call, ax=ax_call)
-    ax_call.set_title('Call Option Prices')
+    ax_call.set_title('Call', loc='center')
     ax_call.set_xlabel('Spot Price')
     ax_call.set_ylabel('Volatility')
 
     fig_put, ax_put = plt.subplots(figsize=(10, 8))
     sns.heatmap(put_data, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".2f", cmap=cmap_put, ax=ax_put)
-    ax_put.set_title('Put Option Prices')
+    ax_put.set_title('Put', loc='center')
     ax_put.set_xlabel('Spot Price')
     ax_put.set_ylabel('Volatility')
 
     return fig_call, fig_put
 
 # Main content
-st.title("Black-Scholes Option Pricing")
+st.title("**The Black-Scholes Model**")
+st.markdown('<p style="font-style: italic; color: #555;">An option-pricing tool to visualise the values of put and call options at various prices.</p>', unsafe_allow_html=True)
 
 # Calculate prices and Greeks
 option_model = PricingModel(time_to_expiry, strike_price, spot_price, volatility, risk_free_rate)
@@ -128,7 +136,7 @@ with col1:
         <div class="metric-box metric-call">
             <div>
                 <div class="metric-label">Call Price</div>
-                <div class="metric-value">${call_price:.2f}</div>
+                <div class="metric-value">£{call_price:.2f}</div>
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -138,7 +146,7 @@ with col2:
         <div class="metric-box metric-put">
             <div>
                 <div class="metric-label">Put Price</div>
-                <div class="metric-value">${put_price:.2f}</div>
+                <div class="metric-value">£{put_price:.2f}</div>
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -153,8 +161,6 @@ st.markdown(f"""
         </tr>
     </table>
 """, unsafe_allow_html=True)
-
-
 
 # Display heatmaps
 st.markdown("""
