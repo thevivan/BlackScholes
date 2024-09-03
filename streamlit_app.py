@@ -2,12 +2,14 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from PIL import Image
 from model import PricingModel  # Import the PricingModel class from model.py
 
 # Page setup
+im = Image.open("data/favicon.ico")
 st.set_page_config(
     page_title="Black-Scholes Model",
-    page_icon="chart_with_upwards_trend",
+    page_icon=im,
     layout="wide",
     initial_sidebar_state="expanded"
 )
