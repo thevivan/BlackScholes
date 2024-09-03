@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for styling
+# Custom CSS
 st.markdown("""
     <style>
         .metric-box {
@@ -64,25 +64,28 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Designer tag with customized hyperlink
-st.markdown('<div class="designer-tag">Designed by <a href="https://www.linkedin.com/in/vivan-v/" target="_blank">Vivan Vasudeva</a></div>', unsafe_allow_html=True)
 
 # Sidebar input
 with st.sidebar:
+    st.write("`Created by:`")
+    linkedin_url = "https://www.linkedin.com/in/vivan-v/"
+    st.markdown(f'<a href="{linkedin_url}" target="_blank" style="text-decoration: none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;">`Vivan Vasudeva`</a>', unsafe_allow_html=True)
+
     st.title("Parameters")
-    spot_price = st.number_input("Spot Price", value=100.0, step=0.05)
-    strike_price = st.number_input("Strike Price", value=100.0, step=0.05)
-    time_to_expiry = st.number_input("Time to Expiry (Years)", value=1.0)
-    volatility = st.number_input("Volatility (σ)", value=0.2)
-    risk_free_rate = st.number_input("Risk-Free Rate", value=0.05)
+    spot_price = st.number_input("Spot Price (£)", value=10.0, step=0.5)
+    strike_price = st.number_input("Strike Price (£)", value=10.0, step=0.5)
+    time_to_expiry = st.number_input("Time to Expiry (Years)", value=1.0, format="%.2g")
+    volatility = st.number_input("Volatility (σ)", value=0.2, format="%.2g")
+    risk_free_rate_percentage = st.number_input("Risk-Free Rate (%)", value=5.0, step=0.1, format="%.2g")
+    risk_free_rate = risk_free_rate_percentage / 100
     
     # Perspective toggle
     perspective = st.radio("Perspective", ["Buy", "Sell"])
 
     st.markdown("---")
     st.subheader("Heatmap Settings")
-    spot_min = st.number_input('Min Spot Price', min_value=0.01, value=spot_price * 0.8, step=0.01)
-    spot_max = st.number_input('Max Spot Price', min_value=0.01, value=spot_price * 1.2, step=0.01)
+    spot_min = st.number_input('Min Spot Price', min_value=0.01, value=spot_price * 0.8, step=0.50)
+    spot_max = st.number_input('Max Spot Price', min_value=0.01, value=spot_price * 1.2, step=0.50)
     vol_min = st.slider('Min Volatility', min_value=0.01, max_value=1.0, value=volatility * 0.5, step=0.01)
     vol_max = st.slider('Max Volatility', min_value=0.01, max_value=1.0, value=volatility * 1.5, step=0.01)
 
@@ -124,9 +127,10 @@ def generate_heatmaps(model, spot_range, vol_range, strike_price, perspective):
 
 # Main content
 st.title("**The Black-Scholes Model**")
-st.markdown('<p style="font-style: italic; color: #555;">An option-pricing tool to visualise the values of put and call options at various prices.</p>', unsafe_allow_html=True)
+st.markdown('<p style="font-style: italic; font-size: 15px;color: #777;">An option-pricing tool to visualise the values of put and call options at various prices.</p>', unsafe_allow_html=True)
 
 # Calculate prices and Greeks
+st.markdown('<p style="font-size: 15px;color: #eee;"></p>', unsafe_allow_html=True)
 option_model = PricingModel(time_to_expiry, strike_price, spot_price, volatility, risk_free_rate)
 call_price, put_price = option_model.calculate()
 
