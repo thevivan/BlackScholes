@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from PIL import Image
-from model import PricingModel  # Import the PricingModel class from model.py
+from model import PricingModel
 
 # Page setup
 im = Image.open("data/favicon.ico")
@@ -89,8 +89,8 @@ with st.sidebar:
     vol_min = st.slider('Min Volatility', min_value=0.01, max_value=1.0, value=volatility * 0.5, step=0.01)
     vol_max = st.slider('Max Volatility', min_value=0.01, max_value=1.0, value=volatility * 1.5, step=0.01)
 
-    spot_range = np.linspace(spot_min, spot_max, 10)
-    vol_range = np.linspace(vol_min, vol_max, 10)
+    spot_range = np.linspace(max(spot_price * 0.8, spot_price - 5), min(spot_price * 1.2, spot_price + 5), 10)
+    vol_range = np.linspace(max(volatility * 0.5, volatility - 0.1), min(volatility * 1.5, volatility + 0.1), 10)
 
 # Heatmap generation
 def generate_heatmaps(model, spot_range, vol_range, strike_price, perspective):
@@ -105,11 +105,11 @@ def generate_heatmaps(model, spot_range, vol_range, strike_price, perspective):
             put_data[i, j] = temp_model.put_price
 
     if perspective == "Buy":
-        cmap_call = "RdYlGn"
-        cmap_put = "RdYlGn"
-    else:
         cmap_call = "RdYlGn_r"
         cmap_put = "RdYlGn_r"
+    else:
+        cmap_call = "RdYlGn"
+        cmap_put = "RdYlGn"
 
     fig_call, ax_call = plt.subplots(figsize=(10, 8))
     sns.heatmap(call_data, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".2f", cmap=cmap_call, ax=ax_call)
@@ -134,7 +134,7 @@ st.markdown('<p style="font-size: 15px;color: #eee;"></p>', unsafe_allow_html=Tr
 option_model = PricingModel(time_to_expiry, strike_price, spot_price, volatility, risk_free_rate)
 call_price, put_price = option_model.calculate()
 
-# Display prices prominently
+# Display prices
 col1, col2 = st.columns(2)
 
 with col1:
@@ -157,7 +157,6 @@ with col2:
         </div>
     """, unsafe_allow_html=True)
 
-# Display Vega, Vanna, and Volga less prominently
 st.markdown(f"""
     <table style="width:100%; margin-top: 10px; border-collapse: collapse; border: none;">
         <tr style="border: none;">
