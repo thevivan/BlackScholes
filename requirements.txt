@@ -4,4 +4,3 @@ pandas
 seaborn
 scipy
 matplotlib
-PIL
