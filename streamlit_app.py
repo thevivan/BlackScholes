@@ -89,8 +89,8 @@ with st.sidebar:
     vol_min = st.slider('Min Volatility', min_value=0.01, max_value=1.0, value=volatility * 0.5, step=0.01)
     vol_max = st.slider('Max Volatility', min_value=0.01, max_value=1.0, value=volatility * 1.5, step=0.01)
 
-    spot_range = np.linspace(max(spot_price * 0.8, spot_price - 5), min(spot_price * 1.2, spot_price + 5), 10)
-    vol_range = np.linspace(max(volatility * 0.5, volatility - 0.1), min(volatility * 1.5, volatility + 0.1), 10)
+    spot_range = np.linspace(max(spot_price * 0.8, spot_price - 5), min(spot_price * 1.2, spot_price + 5), 9)
+    vol_range = np.linspace(max(volatility * 0.5, volatility - 0.1), min(volatility * 1.5, volatility + 0.1), 9)
 
 # Heatmap generation
 def generate_heatmaps(model, spot_range, vol_range, strike_price, perspective):
@@ -113,15 +113,13 @@ def generate_heatmaps(model, spot_range, vol_range, strike_price, perspective):
 
     fig_call, ax_call = plt.subplots(figsize=(10, 8))
     sns.heatmap(call_data, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".2f", cmap=cmap_call, ax=ax_call)
-    ax_call.set_title('Call', loc='center')
-    ax_call.set_xlabel('Spot Price')
-    ax_call.set_ylabel('Volatility')
+    ax_call.set_xlabel('Spot Price (£)')
+    ax_call.set_ylabel('Volatility (σ)')
 
     fig_put, ax_put = plt.subplots(figsize=(10, 8))
     sns.heatmap(put_data, xticklabels=np.round(spot_range, 2), yticklabels=np.round(vol_range, 2), annot=True, fmt=".2f", cmap=cmap_put, ax=ax_put)
-    ax_put.set_title('Put', loc='center')
-    ax_put.set_xlabel('Spot Price')
-    ax_put.set_ylabel('Volatility')
+    ax_put.set_xlabel('Spot Price (£)')
+    ax_put.set_ylabel('Volatility (σ)')
 
     return fig_call, fig_put
 
@@ -134,6 +132,7 @@ st.markdown('<p style="font-size: 15px;color: #eee;"></p>', unsafe_allow_html=Tr
 option_model = PricingModel(time_to_expiry, strike_price, spot_price, volatility, risk_free_rate)
 call_price, put_price = option_model.calculate()
 
+st.markdown(f'<p font-size: 15px;">We assume a derivative with exercise price of £{strike_price:.2f} in {time_to_expiry:.2g} year(s), with a volatility of {volatility:.2g}, and at a current risk-free rate of {risk_free_rate_percentage:.2g}%. If the stock is currently trading for £{spot_price:.2f}, its derivative should be priced at:</p>', unsafe_allow_html=True)
 # Display prices
 col1, col2 = st.columns(2)
 
@@ -176,11 +175,11 @@ st.info("Change the parameters on the left to see how the value changes across d
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Call Option Heatmap")
+    st.subheader("Call Values (£)")
     fig_call, _ = generate_heatmaps(option_model, spot_range, vol_range, strike_price, perspective)
     st.pyplot(fig_call)
 
 with col2:
-    st.subheader("Put Option Heatmap")
+    st.subheader("Put Values (£)")
     _, fig_put = generate_heatmaps(option_model, spot_range, vol_range, strike_price, perspective)
     st.pyplot(fig_put)
