@@ -6,8 +6,8 @@ from model import PricingModel  # Import the PricingModel class from model.py
 
 # Page setup
 st.set_page_config(
-    page_title="Option Pricing Tool",
-    page_icon="📈",
+    page_title="Black-Scholes Model",
+    page_icon="chart_with_upwards_trend",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -166,7 +166,7 @@ st.markdown(f"""
 st.markdown("""
     <h5 style="margin-top: 0px;">&nbsp;</h5>
 """, unsafe_allow_html=True)
-st.info("Analyse how the prices change with varying spot prices and volatilities.")
+st.info("Change the parameters on the left to see how the value changes across different volatilities and spot prices.")
 
 col1, col2 = st.columns(2)
 
