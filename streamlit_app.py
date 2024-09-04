@@ -124,15 +124,17 @@ def generate_heatmaps(model, spot_range, vol_range, strike_price, perspective):
     return fig_call, fig_put
 
 # Main content
-st.title("**The Black-Scholes Model**")
-st.markdown('<p style="font-style: italic; font-size: 15px;color: #777;">An option-pricing tool to visualise the values of put and call options at various prices.</p>', unsafe_allow_html=True)
+st.title("**The** Black-Scholes **Model**")
+st.markdown('<p style="font-style: italic; font-size: 15px;color: #777;">An option-pricing tool to visualise the values of put and call options for various parameters.</p>', unsafe_allow_html=True)
 
 # Calculate prices and Greeks
 st.markdown('<p style="font-size: 15px;color: #eee;"></p>', unsafe_allow_html=True)
 option_model = PricingModel(time_to_expiry, strike_price, spot_price, volatility, risk_free_rate)
 call_price, put_price = option_model.calculate()
 
-st.markdown(f'<p font-size: 15px;">We assume a derivative with exercise price of £{strike_price:.2f} in {time_to_expiry:.2g} year(s), with a volatility of {volatility:.2g}, and at a current risk-free rate of {risk_free_rate_percentage:.2g}%. If the stock is currently trading for £{spot_price:.2f}, its derivative should be priced at:</p>', unsafe_allow_html=True)
+st.markdown(f'<p style="font-size: 15px;">If we assume a derivative has a <i><b>strike price</b></i> of £{strike_price:.2f} in {time_to_expiry:.2g} year(s), a <i><b>volatility</b></i> of {volatility:.2g}, and that the <i><b>current risk-free rate</i></b> is {risk_free_rate_percentage:.2g}%...</p>', unsafe_allow_html=True)
+st.markdown(f'<p style="font-size: 15px;">...then while the underlying stock trades at a <i><b>spot price</i></b> of £{spot_price:.2f}, its derivative should cost&thinsp;:</p>', unsafe_allow_html=True)
+
 # Display prices
 col1, col2 = st.columns(2)
 
@@ -140,8 +142,8 @@ with col1:
     st.markdown(f"""
         <div class="metric-box metric-call">
             <div>
-                <div class="metric-label">Call Value</div>
                 <div class="metric-value">£{call_price:.2f}</div>
+                <div class="metric-label"><i>for a call</i></div>
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -150,27 +152,41 @@ with col2:
     st.markdown(f"""
         <div class="metric-box metric-put">
             <div>
-                <div class="metric-label">Put Value</div>
                 <div class="metric-value">£{put_price:.2f}</div>
+                <div class="metric-label"><i>for a put</i></div>
             </div>
         </div>
     """, unsafe_allow_html=True)
 
-st.markdown(f"""
-    <table style="width:100%; margin-top: 10px; border-collapse: collapse; border: none;">
-        <tr style="border: none;">
-            <td style="text-align: center; font-style: italic; font-size: 20px; border: none;"><strong>Vega:</strong> {option_model.vega:.2f}</td>
-            <td style="text-align: center; font-style: italic; font-size: 20px; border: none;"><strong>Vanna:</strong> {option_model.vanna:.2f}</td>
-            <td style="text-align: center; font-style: italic; font-size: 20px; border: none;"><strong>Volga:</strong> {option_model.volga:.2f}</td>
-        </tr>
-    </table>
-""", unsafe_allow_html=True)
+# Displaying Greeks
+
+# st.markdown(f"""
+#     <table style="width:100%; margin-top: 10px; border-collapse: collapse; border: none;">
+#         <tr style="border: none;">
+#             <td style="text-align: center; font-style: italic; font-size: 20px; border: none;"><strong>Delta (Call):</strong> {option_model.call_delta:.2f}</td>
+#             <td style="text-align: center; font-style: italic; font-size: 20px; border: none;"><strong>Delta (Put):</strong> {option_model.put_delta:.2f}</td>
+#         </tr>
+#         <tr style="border: none;">
+#             <td style="text-align: center; font-style: italic; font-size: 20px; border: none;"><strong>Theta (Call):</strong> {option_model.call_theta:.2f}</td>
+#             <td style="text-align: center; font-style: italic; font-size: 20px; border: none;"><strong>Theta (Put):</strong> {option_model.put_theta:.2f}</td>
+#         </tr>
+#         <tr style="border: none;">
+#             <td style="text-align: center; font-style: italic; font-size: 20px; border: none;"><strong>Gamma:</strong> {option_model.gamma:.2f}</td>
+#             <td style="text-align: center; font-style: italic; font-size: 20px; border: none;"><strong>Vega:</strong> {option_model.vega:.2f}</td>
+#         </tr>
+#         <tr style="border: none;">
+#             <td style="text-align: center; font-style: italic; font-size: 20px; border: none;"><strong>Rho (Call):</strong> {option_model.call_rho:.2f}</td>
+#             <td style="text-align: center; font-style: italic; font-size: 20px; border: none;"><strong>Rho (Put):</strong> {option_model.put_rho:.2f}</td>
+#         </tr>
+#     </table>
+# """, unsafe_allow_html=True)
+
 
 # Display heatmaps
 st.markdown("""
     <h5 style="margin-top: 0px;">&nbsp;</h5>
 """, unsafe_allow_html=True)
-st.info("Change the parameters on the left to see how the value changes across different volatilities and spot prices.")
+st.info("You can change the parameters on the left to see how this changes across different volatilities and spot prices")
 
 col1, col2 = st.columns(2)
 
