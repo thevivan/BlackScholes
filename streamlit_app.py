@@ -74,7 +74,7 @@ with st.sidebar:
     st.title("Parameters")
     spot_price = st.number_input("Spot Price (£)", value=10.0, step=0.5)
     strike_price = st.number_input("Strike Price (£)", value=10.0, step=0.5)
-    time_to_expiry = st.number_input("Time to Expiry (Years)", value=1.0, format="%.2g")
+    time_to_expiry = st.number_input("Time to Expiry (Years)", value=1.5, format="%.2g", step=0.1)
     volatility = st.number_input("Volatility (σ)", value=0.2, format="%.2g")
     risk_free_rate_percentage = st.number_input("Risk-Free Rate (%)", value=5.0, step=0.1, format="%.2g")
     risk_free_rate = risk_free_rate_percentage / 100
